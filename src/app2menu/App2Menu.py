@@ -9,16 +9,18 @@ import shutil
 
 class app2menu():
 		def __init__(self):
-			self.dbg=True
+			self.dbg=False
 			self.desktoppath="/usr/share/applications"
 		#def __init__
 
 		def _debug(self,msg):
 			if self.dbg:
 				print("%s"%msg)
+		#def _debug
 
 		def set_desktop_user(self):
 			self.desktoppath="%s/.local/share/applications"%os.getenv("HOME")
+		#def set_desktop_user
 
 		def _get_basedirs(self):
 			menu_path=[]
@@ -55,9 +57,11 @@ class app2menu():
 			for menufile in menufiles:
 				menu=xdg.Menu.parse(menufile)
 				_walking_menu(menu)
+		#def get_categories
 
 		def get_desktop_info(self,desktop):
 			pass
+		#def get_desktop_info
 
 		def set_desktop_info(self,name,icon,comment,categories,exe=None):
 			if exe==None:
@@ -88,7 +92,7 @@ class app2menu():
 			if val:
 				desk_name="%s.desktop"%name
 				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
+			os.remove(tmp)
+		#def set_desktop_info
 
-app=app2menu()
-app.set_desktop_user()
-app.set_desktop_info("prueba","firefox","esto es una prueba",["GTK","Audio"])
+#class app2menu
