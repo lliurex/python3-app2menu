@@ -57,6 +57,7 @@ class app2menu():
 			for menufile in menufiles:
 				menu=xdg.Menu.parse(menufile)
 				_walking_menu(menu)
+			return(categories)
 		#def get_categories
 
 		def get_desktop_info(self,desktop):
