@@ -1,3 +1,9 @@
+python3-app2menu (0.2) bionic; urgency=medium
+
+  * Fix get_categories return value
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 04 Apr 2019 08:41:16 +0200
+
 python3-app2menu (0.1) bionic; urgency=medium
 
   * Initial release. 
