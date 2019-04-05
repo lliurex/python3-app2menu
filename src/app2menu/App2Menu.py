@@ -73,9 +73,10 @@ class app2menu():
 			tmp.write("Version=1.0\n")
 			tmp.write("Type=Application\n")
 			tmp.write("Name=%s\n"%name)
+			tmp.write("GenericName=%s\n"%name)
 			tmp.write("Icon=%s\n"%icon)
 			tmp.write("Comment=%s\n"%comment)
-			tmp.write("Categories=%s;\n"%';'.join(categories))
+			tmp.write("Categories=Qt;KDE;%s;\n"%';'.join(categories))
 			tmp.write("Exec=%s\n"%exe)
 			val=True
 			tmp.close()
@@ -92,6 +93,7 @@ class app2menu():
 					self._debug("Desktop could not be validated: %s"%e)
 			if val:
 				desk_name="%s.desktop"%name
+				os.chmod(tmpfile,0o6744)
 				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
 			os.remove(tmp)
 		#def set_desktop_info
