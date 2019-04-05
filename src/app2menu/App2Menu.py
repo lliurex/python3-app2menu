@@ -64,7 +64,7 @@ class app2menu():
 			pass
 		#def get_desktop_info
 
-		def set_desktop_info(self,name,icon,comment,categories,exe=None):
+		def set_desktop_info(self,name,icon,comment,categories,exe=None,validate=False):
 			if exe==None:
 				exe=name
 			(tmp_obj,tmpfile)=tempfile.mkstemp(suffix='.desktop')
@@ -85,7 +85,7 @@ class app2menu():
 			except Exception as e:
 				val=False
 				self._debug("Desktop could not be loaded: %s"%e)
-			if val:
+			if val and validate:
 				try:
 					desk.validate()
 				except Exception as e:
