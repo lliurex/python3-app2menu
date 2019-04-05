@@ -95,7 +95,7 @@ class app2menu():
 				desk_name="%s.desktop"%name
 				os.chmod(tmpfile,0o6744)
 				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
-			os.remove(tmp)
+			os.remove(tmpfile)
 		#def set_desktop_info
 
 #class app2menu
