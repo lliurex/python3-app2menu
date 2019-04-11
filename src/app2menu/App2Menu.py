@@ -9,7 +9,7 @@ import shutil
 
 class app2menu():
 		def __init__(self):
-			self.dbg=False
+			self.dbg=True
 			self.desktoppath="/usr/share/applications"
 		#def __init__
 
@@ -60,8 +60,60 @@ class app2menu():
 			return(categories)
 		#def get_categories
 
-		def get_desktop_info(self,desktop):
-			pass
+		def init_desktop_file(self):
+			desktop={}
+			desktop['Categories']=[]
+			desktop['Comment']=''
+			desktop['Exec']=''
+			desktop['GenericName']=''
+			desktop['Icon']=''
+			desktop['Mimetypes']=''
+			desktop['MiniIcon']=''
+			desktop['Name']=''
+			desktop['NoDisplay']=''
+			desktop['NotShowIn']=''
+			desktop['OnlyShowIn']=''
+			desktop['Path']=''
+			desktop['Protocols']=[]
+			desktop['StartupNotify']=''
+			desktop['StartupWMClass']=''
+			desktop['Terminal']=''
+			desktop['TerminalOptions']=[]
+			desktop['TryExec']=''
+			desktop['Type']=''
+			desktop['URL']=''
+			desktop['VersionString']=''
+			return desktop
+
+		def get_desktop_info(self,desktop_file):
+			self._debug("Parsing %s"%desktop_file)
+			desktop=self.init_desktop_file()
+			try:
+				deskInfo=xdg.DesktopEntry.DesktopEntry(desktop_file)
+				desktop['Categories']=deskInfo.getCategories()
+				desktop['Comment']=deskInfo.getComment()
+				desktop['Exec']=deskInfo.getExec()
+				desktop['GenericName']=deskInfo.getGenericName()
+				desktop['Icon']=deskInfo.getIcon()
+				desktop['Mimetypes']=deskInfo.getMimeTypes()
+				desktop['MiniIcon']=deskInfo.getMiniIcon()
+				desktop['Name']=deskInfo.getName()
+				desktop['NoDisplay']=deskInfo.getNoDisplay()
+				desktop['NotShowIn']=deskInfo.getNotShowIn()
+				desktop['OnlyShowIn']=deskInfo.getOnlyShowIn()
+				desktop['Path']=deskInfo.getPath()
+				desktop['Protocols']=deskInfo.getProtocols()
+				desktop['StartupNotify']=deskInfo.getStartupNotify()
+				desktop['StartupWMClass']=deskInfo.getStartupWMClass()
+				desktop['Terminal']=deskInfo.getTerminal()
+				desktop['TerminalOptions']=deskInfo.getTerminalOptions()
+				desktop['TryExec']=deskInfo.getTryExec()
+				desktop['Type']=deskInfo.getType()
+				desktop['URL']=deskInfo.getURL()
+				desktop['VersionString']=deskInfo.getVersionString()
+			except Exception as e:
+				self._debug(e)
+			return desktop
 		#def get_desktop_info
 
 		def set_desktop_info(self,name,icon,comment,categories,exe=None,validate=False):
@@ -76,8 +128,9 @@ class app2menu():
 			tmp.write("GenericName=%s\n"%name)
 			tmp.write("Icon=%s\n"%icon)
 			tmp.write("Comment=%s\n"%comment)
-			tmp.write("Categories=Qt;KDE;%s;\n"%';'.join(categories))
+			tmp.write("Categories=Qt;KDE;%s;\n"%categories)
 			tmp.write("Exec=%s\n"%exe)
+			tmp.write('StartupNotify=true\n')
 			val=True
 			tmp.close()
 			try:
@@ -93,7 +146,7 @@ class app2menu():
 					self._debug("Desktop could not be validated: %s"%e)
 			if val:
 				desk_name="%s.desktop"%name
-				os.chmod(tmpfile,0o6744)
+				os.chmod(tmpfile,0o644)
 				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
 			os.remove(tmpfile)
 		#def set_desktop_info
