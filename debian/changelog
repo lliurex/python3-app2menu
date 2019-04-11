@@ -1,3 +1,9 @@
+python3-app2menu (0.5) bionic; urgency=medium
+
+  * Fix desktop permissions
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 11 Apr 2019 13:17:44 +0200
+
 python3-app2menu (0.4) bionic; urgency=medium
 
   * Add validate switch 
