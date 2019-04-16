@@ -116,7 +116,7 @@ class app2menu():
 			return desktop
 		#def get_desktop_info
 
-		def set_desktop_info(self,name,icon,comment,categories,exe=None,validate=False):
+		def set_desktop_info(self,name,icon,comment,categories,exe=None,validate=False,fname=None):
 			if exe==None:
 				exe=name
 			(tmp_obj,tmpfile)=tempfile.mkstemp(suffix='.desktop')
@@ -145,7 +145,10 @@ class app2menu():
 					val=False
 					self._debug("Desktop could not be validated: %s"%e)
 			if val:
-				desk_name="%s.desktop"%name
+				if fname:
+					desk_name=os.path.basename(fname)
+				else:
+					desk_name="%s.desktop"%name.replace(' ','_')
 				os.chmod(tmpfile,0o644)
 				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
 			os.remove(tmpfile)
