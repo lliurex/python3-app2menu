@@ -148,7 +148,8 @@ class app2menu():
 				if fname:
 					desk_name=os.path.basename(fname)
 				else:
-					desk_name="%s.desktop"%name.replace(' ','_')
+					desk_name=os.path.basename(name)
+					desk_name="%s.desktop"%desk_name.replace(' ','_')
 				os.chmod(tmpfile,0o644)
 				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
 			os.remove(tmpfile)
