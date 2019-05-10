@@ -152,6 +152,7 @@ class app2menu():
 				os.chmod(tmpfile,0o644)
 				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
 			os.remove(tmpfile)
+			return(desk_name)
 		#def set_desktop_info
 
 #class app2menu
