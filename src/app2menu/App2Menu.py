@@ -148,7 +148,7 @@ class app2menu():
 				if fname:
 					desk_name=os.path.basename(fname)
 					if not desk_name.endswith('.desktop'):
-						desk_name="%s.desktop"%desk_name)
+						desk_name="%s.desktop"%desk_name
 				else:
 					desk_name=os.path.basename(name)
 					desk_name="%s.desktop"%desk_name.replace(' ','_')
