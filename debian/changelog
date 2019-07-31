@@ -1,3 +1,9 @@
+python3-app2menu (0.7) bionic; urgency=medium
+
+  * Add desktops from category
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Wed, 31 Jul 2019 08:36:34 +0200
+
 python3-app2menu (0.6) bionic; urgency=medium
 
   * Add parameter for desktop file name
