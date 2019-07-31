@@ -60,6 +60,16 @@ class app2menu():
 			return(categories)
 		#def get_categories
 
+		def get_apps_from_category(self,category):
+			desktops={}
+			for deskFile in os.listdir(self.desktoppath):
+				if deskFile.endswith(".desktop"):
+					desk=xdg.DesktopEntry.DesktopEntry("%s/%s"%(self.desktoppath,deskFile))
+					for cat in desk.getCategories():
+						if category == cat.lower():
+							desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
+			return desktops
+
 		def init_desktop_file(self):
 			desktop={}
 			desktop['Categories']=[]
