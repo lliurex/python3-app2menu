@@ -2,6 +2,7 @@
 import os,sys,subprocess
 import json
 import xdg.Menu
+import xdg.Mime as mime
 import xdg.DesktopEntry
 import xdg.BaseDirectory as xdgdir
 import tempfile
@@ -167,5 +168,21 @@ class app2menu():
 			os.remove(tmpfile)
 			return(desk_name)
 		#def set_desktop_info
+		def get_default_app_for_file(self,filename):
+			app=""
+			print("Filename %s"%filename)
+			mimetype=mime.get_type(filename)
+			print("Filename %s"%mimetype)
+			prc=subprocess.run(["xdg-mime","query","default","%s/%s"%(mimetype.media,mimetype.subtype)],stdout=subprocess.PIPE)
+			deskFile=prc.stdout.decode().rstrip("\n")
+			if deskFile:
+				info=self.get_desktop_info("/usr/share/applications/%s"%deskFile)
+				print(info)
+				if info['Exec']:
+					print(info["Exec"])
+					app=info['Exec'].split(" ")[0]
+			print("Filename %s"%app)
+			return(app)
+
 
 #class app2menu
