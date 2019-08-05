@@ -1,3 +1,9 @@
+python3-app2menu (0.8) bionic; urgency=medium
+
+  * Add get default app for file
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 05 Aug 2019 08:43:50 +0200
+
 python3-app2menu (0.7) bionic; urgency=medium
 
   * Add desktops from category
