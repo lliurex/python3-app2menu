@@ -10,7 +10,7 @@ import shutil
 
 class app2menu():
 		def __init__(self):
-			self.dbg=True
+			self.dbg=False
 			self.desktoppath="/usr/share/applications"
 		#def __init__
 
@@ -170,18 +170,19 @@ class app2menu():
 		#def set_desktop_info
 		def get_default_app_for_file(self,filename):
 			app=""
-			print("Filename %s"%filename)
 			mimetype=mime.get_type(filename)
-			print("Filename %s"%mimetype)
 			prc=subprocess.run(["xdg-mime","query","default","%s/%s"%(mimetype.media,mimetype.subtype)],stdout=subprocess.PIPE)
 			deskFile=prc.stdout.decode().rstrip("\n")
 			if deskFile:
 				info=self.get_desktop_info("/usr/share/applications/%s"%deskFile)
-				print(info)
+				self._debug(info)
 				if info['Exec']:
-					print(info["Exec"])
-					app=info['Exec'].split(" ")[0]
-			print("Filename %s"%app)
+					self._debug("Find %s"%info['Exec'])
+					if ("%" in info['Exec']):
+						app=" ".join(info['Exec'].split(" ")[:-1])
+					else:
+						app=info['Exec']
+			self._debug("Default app for %s: %s"%(filename,app))
 			return(app)
 
 
