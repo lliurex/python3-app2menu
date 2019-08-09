@@ -1,3 +1,9 @@
+python3-app2menu (0.8.2) bionic; urgency=medium
+
+  * Search categories with spaces
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 09 Aug 2019 13:37:27 +0200
+
 python3-app2menu (0.8.1) bionic; urgency=medium
 
   * Improve get default app method
