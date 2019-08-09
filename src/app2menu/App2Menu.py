@@ -67,7 +67,8 @@ class app2menu():
 				if deskFile.endswith(".desktop"):
 					desk=xdg.DesktopEntry.DesktopEntry("%s/%s"%(self.desktoppath,deskFile))
 					for cat in desk.getCategories():
-						if category == cat.lower():
+						catlow=cat.lower()
+						if category == catlow or category.replace(" ","-") == catlow:
 							desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
 			return desktops
 
