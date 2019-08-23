@@ -10,20 +10,22 @@ import shutil
 
 class app2menu():
 		def __init__(self):
-			self.dbg=False
+			self.dbg=True
 			self.desktoppath="/usr/share/applications"
 		#def __init__
 
 		def _debug(self,msg):
 			if self.dbg:
-				print("%s"%msg)
+				print("app2menu: %s"%msg)
 		#def _debug
 
 		def set_desktop_user(self):
+			self._debug("Set path to user")
 			self.desktoppath="%s/.local/share/applications"%os.getenv("HOME")
 		#def set_desktop_user
 		
 		def set_desktop_system(self):
+			self._debug("Set path to system")
 			self.desktoppath="/usr/share/applications"
 		#def set_desktop_user
 
@@ -131,6 +133,31 @@ class app2menu():
 				self._debug(e)
 			return desktop
 		#def get_desktop_info
+
+		def write_custom_desktop(self, desktop,path):
+			(tmp_obj,tmpfile)=tempfile.mkstemp(suffix='.desktop')
+			tmp=open(tmpfile,'w+')
+			tmp.write("[Desktop Entry]\n")
+			tmp.write("Version=1.0\n")
+			tmp.write("Type=Application\n")
+			for key,data in desktop.items():
+				tmp.write("%s=%s\n"%(key.capitalize(),data))
+			tmp.close()
+			sw_ok=True
+			try:
+				desk=xdg.DesktopEntry.DesktopEntry(tmpfile)
+			except Exception as e:
+				sw_ok=False
+				self._debug("Desktop could not be loaded: %s"%e)
+			if sw_ok:
+				os.chmod(tmpfile,0o644)
+				deskName=desktop['Name'].replace(" ","_")
+				if not deskName.endswith('.desktop'):
+					deskName="%s.desktop"%deskName
+				shutil.copy2(tmpfile,"%s/%s"%(path,deskName))
+			os.remove(tmpfile)
+			return("%s/%s"%(path,deskName))
+
 
 		def set_desktop_info(self,name,icon,comment,categories,exe=None,validate=False,fname=None):
 			if exe==None:
