@@ -22,6 +22,10 @@ class app2menu():
 		def set_desktop_user(self):
 			self.desktoppath="%s/.local/share/applications"%os.getenv("HOME")
 		#def set_desktop_user
+		
+		def set_desktop_system(self):
+			self.desktoppath="/usr/share/applications"
+		#def set_desktop_user
 
 		def _get_basedirs(self):
 			menu_path=[]
@@ -169,6 +173,7 @@ class app2menu():
 			os.remove(tmpfile)
 			return(desk_name)
 		#def set_desktop_info
+
 		def get_default_app_for_file(self,filename):
 			app=""
 			mimetype=mime.get_type(filename)
