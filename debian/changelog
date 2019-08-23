@@ -1,3 +1,9 @@
+python3-app2menu (0.8.3) bionic; urgency=medium
+
+  * Add set_desktop_system
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 23 Aug 2019 10:35:34 +0200
+
 python3-app2menu (0.8.2) bionic; urgency=medium
 
   * Search categories with spaces
