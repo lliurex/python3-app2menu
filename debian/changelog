@@ -1,6 +1,7 @@
 python3-app2menu (0.8.3) bionic; urgency=medium
 
   * Add set_desktop_system
+  * Add write_custom_desktop
 
  -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 23 Aug 2019 10:35:34 +0200
 
