@@ -69,13 +69,14 @@ class app2menu():
 
 		def get_apps_from_category(self,category):
 			desktops={}
-			for deskFile in os.listdir(self.desktoppath):
-				if deskFile.endswith(".desktop"):
-					desk=xdg.DesktopEntry.DesktopEntry("%s/%s"%(self.desktoppath,deskFile))
-					for cat in desk.getCategories():
-						catlow=cat.lower()
-						if category == catlow or category.replace(" ","-") == catlow:
-							desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
+			if os.path.isdir(self.desktoppath):
+				for deskFile in os.listdir(self.desktoppath):
+					if deskFile.endswith(".desktop"):
+						desk=xdg.DesktopEntry.DesktopEntry("%s/%s"%(self.desktoppath,deskFile))
+						for cat in desk.getCategories():
+							catlow=cat.lower()
+							if category == catlow or category.replace(" ","-") == catlow:
+								desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
 			return desktops
 
 		def init_desktop_file(self):
