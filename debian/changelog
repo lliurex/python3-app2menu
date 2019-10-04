@@ -1,3 +1,9 @@
+python3-app2menu (0.8.4) bionic; urgency=medium
+
+  * Fix non existent paths
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Fri, 04 Oct 2019 11:32:47 +0200
+
 python3-app2menu (0.8.3) bionic; urgency=medium
 
   * Add set_desktop_system
