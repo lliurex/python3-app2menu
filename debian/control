@@ -13,3 +13,7 @@ Architecture: all
 Depends: ${misc:Depends}, ${python3:Depends}, python3-xdg
 Description: Lib for generate desktop files
 
+Package: app2menu-helper
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}, python3-app2menu
+Description: Policy kit helper for app2menu lib
