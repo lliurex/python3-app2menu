@@ -10,10 +10,10 @@ Homepage: http://lliurex.net
 
 Package: python3-app2menu
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends}, python3-xdg
+Depends: python3,python3-xdg, app2menu-helper
 Description: Lib for generate desktop files
 
 Package: app2menu-helper
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends}, python3-app2menu
+Depends: python3 
 Description: Policy kit helper for app2menu lib
