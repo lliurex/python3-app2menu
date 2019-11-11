@@ -197,6 +197,11 @@ class app2menu():
 					desk_name=os.path.basename(name)
 					desk_name="%s.desktop"%desk_name.replace(' ','_')
 				os.chmod(tmpfile,0o644)
+				if not os.path.isdir(self.desktoppath):
+					try:
+						os.makedirs(self.desktoppath)
+					except Exception as e:
+						print("Couldn't create %s: %s"%(self.desktoppath,e))
 				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
 			os.remove(tmpfile)
 			return(desk_name)
