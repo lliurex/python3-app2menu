@@ -1,3 +1,9 @@
+python3-app2menu (1.0) bionic; urgency=medium
+
+  * Fix custom paths for custom desktops
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 11 Nov 2019 13:39:20 +0100
+
 python3-app2menu (0.9) bionic; urgency=medium
 
   * Added polkit helper
