@@ -1,3 +1,9 @@
+python3-app2menu (1.0.1) bionic; urgency=medium
+
+  * Keep credentials for polkit
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Mon, 18 Nov 2019 14:55:03 +0100
+
 python3-app2menu (1.0) bionic; urgency=medium
 
   * Fix custom paths for custom desktops
