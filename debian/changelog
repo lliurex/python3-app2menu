@@ -1,3 +1,9 @@
+python3-app2menu (1.0.2) bionic; urgency=medium
+
+  * Catch exception on invalid menu file parsing
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Tue, 19 Nov 2019 14:21:28 +0100
+
 python3-app2menu (1.0.1) bionic; urgency=medium
 
   * Keep credentials for polkit
