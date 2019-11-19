@@ -62,8 +62,11 @@ class app2menu():
 			for xdgdir in xdgdirs:
 				_walking_path(xdgdir)
 			for menufile in menufiles:
-				menu=xdg.Menu.parse(menufile)
-				_walking_menu(menu)
+				try:
+					menu=xdg.Menu.parse(menufile)
+					_walking_menu(menu)
+				except Exception as e:
+					self._debug("Error parsing %s: %s"%(menufile,e))
 			return(categories)
 		#def get_categories
 
