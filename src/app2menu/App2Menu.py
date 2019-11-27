@@ -75,7 +75,10 @@ class app2menu():
 			if os.path.isdir(self.desktoppath):
 				for deskFile in os.listdir(self.desktoppath):
 					if deskFile.endswith(".desktop"):
-						desk=xdg.DesktopEntry.DesktopEntry("%s/%s"%(self.desktoppath,deskFile))
+						try:
+							desk=xdg.DesktopEntry.DesktopEntry("%s/%s"%(self.desktoppath,deskFile))
+						except:
+							continue
 						for cat in desk.getCategories():
 							catlow=cat.lower()
 							if category == catlow or category.replace(" ","-") == catlow:
