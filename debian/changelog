@@ -1,3 +1,9 @@
+python3-app2menu (1.0.4) bionic; urgency=medium
+
+  * Disable debug
+
+ -- Juanma1980 <juanma1980@gmail.com>  Thu, 16 Jan 2020 18:55:40 +0000
+
 python3-app2menu (1.0.3) bionic; urgency=medium
 
   * Fix exception when parsing malformed desktop
