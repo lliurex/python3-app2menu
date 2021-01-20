@@ -1,3 +1,9 @@
+python3-app2menu (1.0.4.1) focal; urgency=medium
+
+  * First focal release
+
+ -- Juanma1980 <juanma1980@gmail.com>  Wed, 20 Jan 2021 12:34:47 +0100
+
 python3-app2menu (1.0.4) bionic; urgency=medium
 
   * Disable debug
