@@ -10,7 +10,7 @@ import shutil
 
 class app2menu():
 		def __init__(self):
-			self.dbg=False
+			self.dbg=True
 			self.desktoppath="/usr/share/applications"
 		#def __init__
 
@@ -78,10 +78,13 @@ class app2menu():
 						try:
 							desk=xdg.DesktopEntry.DesktopEntry("%s/%s"%(self.desktoppath,deskFile))
 						except:
+							self._debug("Rejecting {}".format(deskFile))
 							continue
 						for cat in desk.getCategories():
 							catlow=cat.lower()
 							if category == catlow or category.replace(" ","-") == catlow:
+								desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
+							elif "{}s".format(catlow)==category:
 								desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
 			return desktops
 
@@ -158,11 +161,14 @@ class app2menu():
 				self._debug("Desktop could not be loaded: %s"%e)
 			if sw_ok:
 				os.chmod(tmpfile,0o644)
-				deskName=desktop['Name'].replace(" ","_")
+				deskName=desktop['Name'].replace(" ","_").replace(",","_")
 				if not deskName.endswith('.desktop'):
 					deskName="%s.desktop"%deskName
-				shutil.copy2(tmpfile,"%s/%s"%(path,deskName))
-			os.remove(tmpfile)
+				destPath=os.path.join(path,deskName)
+				self._debug("Copying {} to {}".format(tmpfile,destPath))
+				shutil.copy2(tmpfile,"{}".format(destPath))
+				self._debug("Created {}".format(tmpfile,destPath))
+			#os.remove(tmpfile)
 			return("%s/%s"%(path,deskName))
 
 
