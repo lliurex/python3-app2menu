@@ -1,4 +1,4 @@
-python3-app2menu (1.0.5) focal; urgency=medium
+python3-app2menu (1.0.6) focal; urgency=medium
 
   * Search plurals for categories when looking for apps
 
