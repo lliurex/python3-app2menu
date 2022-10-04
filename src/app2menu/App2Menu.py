@@ -10,7 +10,7 @@ import shutil
 
 class app2menu():
 		def __init__(self):
-			self.dbg=True
+			self.dbg=False
 			self.desktoppath="/usr/share/applications"
 		#def __init__
 
