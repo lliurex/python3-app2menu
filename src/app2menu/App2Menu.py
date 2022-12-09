@@ -76,9 +76,25 @@ class app2menu():
 				for deskFile in os.listdir(self.desktoppath):
 					if deskFile.endswith(".desktop"):
 						try:
-							desk=xdg.DesktopEntry.DesktopEntry("%s/%s"%(self.desktoppath,deskFile))
+							desk=xdg.DesktopEntry.DesktopEntry(os.path.join(self.desktoppath,deskFile))
 						except:
 							self._debug("Rejecting {}".format(deskFile))
+							continue
+						exe=desk.getExec().split()
+						sw=False
+						blacklist=["/bin/bash","env","/bin/sh"]
+						for component in exe:
+							if "%" in component or component in blacklist:
+								continue
+							if os.path.isfile(component)==True:
+								sw=True
+								break
+							else:
+								which=shutil.which(component)
+								if which!="" and which!=None:
+									sw=True
+									break
+						if sw==False:
 							continue
 						for cat in desk.getCategories():
 							catlow=cat.lower()
