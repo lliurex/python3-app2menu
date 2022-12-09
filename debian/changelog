@@ -1,3 +1,9 @@
+python3-app2menu (1.1) focal; urgency=medium
+
+  * discard desktops without executable or not launchables
+
+ -- Juanma1980 <juanma1980@gmail.com>  Fri, 09 Dec 2022 18:53:08 +0100
+
 python3-app2menu (1.0.6) focal; urgency=medium
 
   * Search plurals for categories when looking for apps
