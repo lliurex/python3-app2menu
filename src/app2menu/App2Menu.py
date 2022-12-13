@@ -87,20 +87,23 @@ class app2menu():
 			def _walking_menu(menu,depth=0,mainCat=''):
 				if str(menu).lower() not in categories:
 					categories.append(str(menu).lower())
-				for cat in menu.getEntries():
-					if isinstance(cat,xdg.Menu.Menu):
-				#		if str(cat) not in categories_tree.keys():
-						if depth==0:
-							mainCat=str(cat)
-							categories_tree[mainCat]=[]
-							_walking_menu(cat,depth+1,mainCat)
-						else:
-							newCat=str(cat)
-							categories_tree[newCat]=[]
-							_walking_menu(cat,depth+1,newCat)
-					elif mainCat!='':
-						if str(cat).endswith(".desktop"):
-							categories_tree[mainCat].append(str(cat))
+				if "lliurex" in str(menu).lower():
+				#Lliurex xdg own menus for any reason don't load entries...
+					categories_tree[str(menu)]=self.get_apps_from_category(str(menu).lower())
+				else:
+					for cat in menu.getEntries():
+						if isinstance(cat,xdg.Menu.Menu):
+							if depth==0:
+								mainCat=str(cat)
+								categories_tree[mainCat]=[]
+								_walking_menu(cat,depth+1,mainCat)
+							else:
+								newCat=str(cat)
+								categories_tree[newCat]=[]
+								_walking_menu(cat,depth+1,newCat)
+						elif mainCat!='':
+							if str(cat).endswith(".desktop"):
+								categories_tree[mainCat].append(str(cat))
 
 			for xdgdir in xdgdirs:
 				_walking_path(xdgdir)
