@@ -70,6 +70,54 @@ class app2menu():
 			return(categories)
 		#def get_categories
 
+		def get_categories_tree(self):
+			xdgdirs=self._get_basedirs()
+			menufiles=[]
+			menuentries=[]
+			categories=[]
+			categories_tree={}
+			def _walking_path(path):
+				file_list=os.listdir(path)
+				for file_item in file_list:
+					if os.path.isdir("%s/%s"%(path,file_item)):
+						_walking_path("%s/%s"%(path,file_item))				
+					elif file_item.endswith(".menu"):
+						menufiles.append("%s/%s"%(path,file_item))
+
+			def _walking_menu(menu,depth=0,mainCat=''):
+				if str(menu).lower() not in categories:
+					categories.append(str(menu).lower())
+				for cat in menu.getEntries():
+					if isinstance(cat,xdg.Menu.Menu):
+				#		if str(cat) not in categories_tree.keys():
+						if depth==0:
+							mainCat=str(cat)
+							categories_tree[mainCat]=[]
+							_walking_menu(cat,depth+1,mainCat)
+						else:
+							newCat=str(cat)
+							categories_tree[newCat]=[]
+							_walking_menu(cat,depth+1,newCat)
+					elif mainCat!='':
+						if str(cat).endswith(".desktop"):
+							categories_tree[mainCat].append(str(cat))
+
+			for xdgdir in xdgdirs:
+				_walking_path(xdgdir)
+			for menufile in menufiles:
+				mainCat=''
+				try:
+					menu=xdg.Menu.parse(menufile)
+					_walking_menu(menu)
+				except Exception as e:
+					self._debug("Error parsing %s: %s"%(menufile,e))
+			populated_categories={}
+			for cat,tree in categories_tree.items():
+				if len(tree)>1:
+					populated_categories[cat]=tree
+			return(populated_categories)
+		#def get_categories_tree
+
 		def get_apps_from_category(self,category):
 			desktops={}
 			if os.path.isdir(self.desktoppath):
@@ -81,20 +129,7 @@ class app2menu():
 							self._debug("Rejecting {}".format(deskFile))
 							continue
 						exe=desk.getExec().split()
-						sw=False
-						blacklist=["/bin/bash","env","/bin/sh"]
-						for component in exe:
-							if "%" in component or component in blacklist:
-								continue
-							if os.path.isfile(component)==True:
-								sw=True
-								break
-							else:
-								which=shutil.which(component)
-								if which!="" and which!=None:
-									sw=True
-									break
-						if sw==False:
+						if self._validate_exe(exe)==False:
 							continue
 						for cat in desk.getCategories():
 							catlow=cat.lower()
@@ -103,6 +138,44 @@ class app2menu():
 							elif "{}s".format(catlow)==category:
 								desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
 			return desktops
+		#def get_apps_from_category
+
+		def get_apps_from_menuentry(self,entry):
+			desktops={}
+			categories=self.get_categories_tree()
+			entries=categories.get(entry,[])
+			if os.path.isdir(self.desktoppath):
+				for deskFile in entries:
+					if deskFile.endswith(".desktop"):
+						try:
+							desk=xdg.DesktopEntry.DesktopEntry(os.path.join(self.desktoppath,deskFile))
+						except Exception as e:
+							self._debug("Rejecting {}".format(deskFile))
+							print(e)
+							continue
+						exe=desk.getExec().split()
+						if self._validate_exe(exe)==False:
+							continue
+						desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
+			return desktops
+		#def get_apps_from_menuentry
+
+		def _validate_exe(self,exe):
+			sw=False
+			blacklist=["/bin/bash","env","/bin/sh"]
+			for component in exe:
+				if "%" in component or component in blacklist:
+					continue
+				if os.path.isfile(component)==True:
+					sw=True
+					break
+				else:
+					which=shutil.which(component)
+					if which!="" and which!=None:
+						sw=True
+						break
+			return(sw)
+		#def _validate_exe
 
 		def init_desktop_file(self):
 			desktop={}
