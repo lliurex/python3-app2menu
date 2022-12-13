@@ -1,4 +1,4 @@
-python3-app2menu (1.2) focal; urgency=medium
+python3-app2menu (1.2.1) focal; urgency=medium
 
   * discard desktops without executable or not launchables
   * Add methods for inspecting menu entries directly
