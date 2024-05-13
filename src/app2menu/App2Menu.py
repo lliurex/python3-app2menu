@@ -16,12 +16,12 @@ class app2menu():
 
 		def _debug(self,msg):
 			if self.dbg:
-				print("app2menu: %s"%msg)
+				print("app2menu: {}".format(msg))
 		#def _debug
 
 		def set_desktop_user(self):
 			self._debug("Set path to user")
-			self.desktoppath="%s/.local/share/applications"%os.getenv("HOME")
+			self.desktoppath=os.path.join(os.getenve("HOME"),".local","share","applications")
 		#def set_desktop_user
 		
 		def set_desktop_system(self):
@@ -35,7 +35,7 @@ class app2menu():
 				if os.path.isdir(path):
 					for subdirpath in os.listdir(path):
 						if "menus" in subdirpath:
-							menu_path.append("%s/%s"%(path,subdirpath))
+							menu_path.append(os.path.join(path,subdirpath))
 			return (menu_path)
 		#def _get_basedirs
 
@@ -47,10 +47,11 @@ class app2menu():
 			def _walking_path(path):
 				file_list=os.listdir(path)
 				for file_item in file_list:
-					if os.path.isdir("%s/%s"%(path,file_item)):
-						_walking_path("%s/%s"%(path,file_item))				
+					fpath=os.path.join(path,file_item)
+					if os.path.isdir(fpath):
+						_walking_path(fpath)
 					elif file_item.endswith(".menu"):
-						menufiles.append("%s/%s"%(path,file_item))
+						menufiles.append(fpath)
 
 			def _walking_menu(menu,depth=0):
 				if str(menu).lower() not in categories:
@@ -66,7 +67,7 @@ class app2menu():
 					menu=xdg.Menu.parse(menufile)
 					_walking_menu(menu)
 				except Exception as e:
-					self._debug("Error parsing %s: %s"%(menufile,e))
+					self._debug("Error parsing {0}: {1}".format(menufile,e))
 			return(categories)
 		#def get_categories
 
@@ -79,10 +80,11 @@ class app2menu():
 			def _walking_path(path):
 				file_list=os.listdir(path)
 				for file_item in file_list:
-					if os.path.isdir("%s/%s"%(path,file_item)):
-						_walking_path("%s/%s"%(path,file_item))				
+					fpath=os.path.join(path,file_item)
+					if os.path.isdir(fpath):
+						_walking_path(fpath)
 					elif file_item.endswith(".menu"):
-						menufiles.append("%s/%s"%(path,file_item))
+						menufiles.append(fpath)
 
 			def _walking_menu(menu,depth=0,mainCat=''):
 				if str(menu).lower() not in categories:
@@ -113,7 +115,7 @@ class app2menu():
 					menu=xdg.Menu.parse(menufile)
 					_walking_menu(menu)
 				except Exception as e:
-					self._debug("Error parsing %s: %s"%(menufile,e))
+					self._debug("Error parsing {0}: {1}".format(menufile,e))
 			populated_categories={}
 			for cat,tree in categories_tree.items():
 				if len(tree)>1:
@@ -126,8 +128,9 @@ class app2menu():
 			if os.path.isdir(self.desktoppath):
 				for deskFile in os.listdir(self.desktoppath):
 					if deskFile.endswith(".desktop"):
+						dpath=os.path.join(self.desktoppath,deskFile)
 						try:
-							desk=xdg.DesktopEntry.DesktopEntry(os.path.join(self.desktoppath,deskFile))
+							desk=xdg.DesktopEntry.DesktopEntry(dpath)
 						except:
 							self._debug("Rejecting {}".format(deskFile))
 							continue
@@ -137,9 +140,11 @@ class app2menu():
 						for cat in desk.getCategories():
 							catlow=cat.lower()
 							if category == catlow or category.replace(" ","-") == catlow:
-								desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
+								desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName(),"path":dpath}
+								break
 							elif "{}s".format(catlow)==category:
-								desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName()}
+								desktops[deskFile]={'icon':desk.getIcon(),'exe':desk.getExec(),'name':desk.getName(),"path":dpath}
+								break
 			return desktops
 		#def get_apps_from_category
 
@@ -206,7 +211,7 @@ class app2menu():
 			return desktop
 
 		def get_desktop_info(self,desktop_file):
-			self._debug("Parsing %s"%desktop_file)
+			self._debug("Parsing {}".format(desktop_file))
 			desktop=self.init_desktop_file()
 			try:
 				deskInfo=xdg.DesktopEntry.DesktopEntry(desktop_file)
@@ -237,31 +242,33 @@ class app2menu():
 		#def get_desktop_info
 
 		def write_custom_desktop(self, desktop,path):
+			destPath=path
 			(tmp_obj,tmpfile)=tempfile.mkstemp(suffix='.desktop')
 			tmp=open(tmpfile,'w+')
 			tmp.write("[Desktop Entry]\n")
 			tmp.write("Version=1.0\n")
 			tmp.write("Type=Application\n")
 			for key,data in desktop.items():
-				tmp.write("%s=%s\n"%(key.capitalize(),data))
+				tmp.write("{0}={1}\n".format(key.capitalize(),data))
 			tmp.close()
 			sw_ok=True
 			try:
 				desk=xdg.DesktopEntry.DesktopEntry(tmpfile)
 			except Exception as e:
 				sw_ok=False
-				self._debug("Desktop could not be loaded: %s"%e)
+				self._debug("Desktop could not be loaded: {}".format(e))
 			if sw_ok:
 				os.chmod(tmpfile,0o644)
-				deskName=desktop['Name'].replace(" ","_").replace(",","_")
-				if not deskName.endswith('.desktop'):
-					deskName="%s.desktop"%deskName
-				destPath=os.path.join(path,deskName)
+				if path.endswith(".desktop")==False:
+					deskName=desktop['Name'].replace(" ","_").replace(",","_")
+					if not deskName.endswith('.desktop'):
+						deskName="{}.desktop".format(deskName)
+					destPath=os.path.join(path,deskName)
 				self._debug("Copying {} to {}".format(tmpfile,destPath))
 				shutil.copy2(tmpfile,"{}".format(destPath))
 				self._debug("Created {}".format(tmpfile,destPath))
 			#os.remove(tmpfile)
-			return("%s/%s"%(path,deskName))
+			return(destPath)
 
 
 		def set_desktop_info(self,name,icon,comment,categories,exe=None,validate=False,fname=None):
@@ -272,12 +279,12 @@ class app2menu():
 			tmp.write("[Desktop Entry]\n")
 			tmp.write("Version=1.0\n")
 			tmp.write("Type=Application\n")
-			tmp.write("Name=%s\n"%name)
-			tmp.write("GenericName=%s\n"%name)
-			tmp.write("Icon=%s\n"%icon)
-			tmp.write("Comment=%s\n"%comment)
-			tmp.write("Categories=Qt;KDE;%s;\n"%categories)
-			tmp.write("Exec=%s\n"%exe)
+			tmp.write("Name={}\n".format(name))
+			tmp.write("GenericName={}\n".format(name))
+			tmp.write("Icon={}\n".format(icon))
+			tmp.write("Comment={}\n".format(comment))
+			tmp.write("Categories={};\n".format(categories))
+			tmp.write("Exec={}\n".format(exe))
 			tmp.write('StartupNotify=true\n')
 			val=True
 			tmp.close()
@@ -285,28 +292,28 @@ class app2menu():
 				desk=xdg.DesktopEntry.DesktopEntry(tmpfile)
 			except Exception as e:
 				val=False
-				self._debug("Desktop could not be loaded: %s"%e)
+				self._debug("Desktop could not be loaded: {}".format(e))
 			if val and validate:
 				try:
 					desk.validate()
 				except Exception as e:
 					val=False
-					self._debug("Desktop could not be validated: %s"%e)
+					self._debug("Desktop could not be validated: {}".format(e))
 			if val:
 				if fname:
 					desk_name=os.path.basename(fname)
 					if not desk_name.endswith('.desktop'):
-						desk_name="%s.desktop"%desk_name
+						desk_name="{}.desktop".format(desk_name)
 				else:
 					desk_name=os.path.basename(name)
-					desk_name="%s.desktop"%desk_name.replace(' ','_')
+					desk_name="{}.desktop".format(desk_name.replace(' ','_'))
 				os.chmod(tmpfile,0o644)
 				if not os.path.isdir(self.desktoppath):
 					try:
 						os.makedirs(self.desktoppath)
 					except Exception as e:
-						print("Couldn't create %s: %s"%(self.desktoppath,e))
-				shutil.copy2(tmpfile,"%s/%s"%(self.desktoppath,desk_name))
+						print("Couldn't create {0}: {1}".format(self.desktoppath,e))
+				shutil.copy2(tmpfile,os.path.join(self.desktoppath,desk_name))
 			os.remove(tmpfile)
 			return(desk_name)
 		#def set_desktop_info
@@ -314,19 +321,17 @@ class app2menu():
 		def get_default_app_for_file(self,filename):
 			app=""
 			mimetype=mime.get_type(filename)
-			prc=subprocess.run(["xdg-mime","query","default","%s/%s"%(mimetype.media,mimetype.subtype)],stdout=subprocess.PIPE)
+			prc=subprocess.run(["xdg-mime","query","default","{0}/{1}".format(mimetype.media,mimetype.subtype)],stdout=subprocess.PIPE)
 			deskFile=prc.stdout.decode().rstrip("\n")
 			if deskFile:
-				info=self.get_desktop_info("/usr/share/applications/%s"%deskFile)
+				info=self.get_desktop_info("/usr/share/applications/{}".format(deskFile))
 				self._debug(info)
 				if info['Exec']:
-					self._debug("Find %s"%info['Exec'])
+					self._debug("Find {}".format(info['Exec']))
 					if ("%" in info['Exec']):
 						app=" ".join(info['Exec'].split(" ")[:-1])
 					else:
 						app=info['Exec']
-			self._debug("Default app for %s: %s"%(filename,app))
+			self._debug("Default app for {0}: {1}".format(filename,app))
 			return(app)
-
-
 #class app2menu
