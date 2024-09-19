@@ -1,3 +1,9 @@
+python3-app2menu (1.4-0lliurex25) noble; urgency=medium
+
+  * Noble release
+
+ -- Juanma1980 <juanma1980@gmail.com>  Thu, 19 Sep 2024 08:25:44 +0200
+
 python3-app2menu (1.4) jammy; urgency=medium
 
   * Set custom path for applications
