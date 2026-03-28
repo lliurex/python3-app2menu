@@ -334,4 +334,24 @@ class app2menu():
 						app=info['Exec']
 			self._debug("Default app for {0}: {1}".format(filename,app))
 			return(app)
+		#def get_default_app_for_file
+
+		def get_apps_for_mime(self,mime):
+			mcache="/usr/share/applications/mimeinfo.cache"
+			apps=[]
+			if os.path.isfile(mcache):
+				fcontent=""
+				with open(mcache,"r") as f:
+					fcontent=f.read()
+				for fline in fcontent.split("\n"):
+					if fline.startswith(mime):
+						mapps=fline.split("=")[-1]
+						for deskFile in mapps.split(";"):
+							if len(deskFile.strip())>0:
+								info=self.get_desktop_info("/usr/share/applications/{}".format(deskFile))
+								if info['Exec']:
+									apps.append(info)
+			return(apps)
+		#def get_apps_for_mime
+
 #class app2menu
